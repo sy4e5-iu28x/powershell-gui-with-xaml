@@ -4,5 +4,5 @@ class AppParameters {
     # Xmlテンプレートファイルパス
     static [string] $templateFilePath = "./xml/NodeTemplate.xml"
     # アプリデータソースファイルパス
-    static [string] $defaultDataSourceFilePath = "./xml/app_data_source.xml"
+    static [string] $defaultDataSourceFilePath = "./xml/AppDataSource.xml"
 }

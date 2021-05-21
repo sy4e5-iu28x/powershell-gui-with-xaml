@@ -1,3 +1,3 @@
 <Configurations>
-  <DataSourceFilePath>./xml/app_data_source.xml</DataSourceFilePath>
+  <DataSourceFilePath>./xml/AppDataSource.xml</DataSourceFilePath>
 </Configurations>

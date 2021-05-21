@@ -9,4 +9,5 @@ function Initialize-AppFiles {
     # アプリ設定ファイル初期化
     [ConfigXmlHelper]::GetInstance().Initialize()
     # データソースファイル初期化
+    [DataSourceXmlHelper]::GetInstance().Initialize()
 }

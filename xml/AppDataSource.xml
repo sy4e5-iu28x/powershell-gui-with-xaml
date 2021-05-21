@@ -1,0 +1,15 @@
+<Databases>
+  <Database ID="0">
+    <Definitions>
+      <Sequences>
+        <DatabaseID>1</DatabaseID>
+        <TableID>0</TableID>
+        <RecordID>0</RecordID>
+      </Sequences>
+      <TableDefinitions>
+      </TableDefinitions>
+    </Definitions>
+    <Tables>
+    </Tables>
+  </Database>
+</Databases>

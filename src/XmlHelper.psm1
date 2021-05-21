@@ -122,12 +122,12 @@ class ConfigXmlHelper {
     .SYNOPSIS
     初期設定
     #>
-    Initialize() {
+    [ConfigXmlHelper] Initialize() {
         try {
             if(Test-Path $this.filePath) {
                 # 存在する場合は読込を行う
                 $this.xmlDoc = [XmlHelper]::GetInstance().ReadXmlWithStream($this.filePath)
-                return
+                return $this
             }
             # 存在しない場合、ファイルを生成する
             $this.xmlDoc = [System.Xml.XmlDocument]::new()
@@ -144,9 +144,26 @@ class ConfigXmlHelper {
             $dataSourcePathNode.InnerText = [AppParameters]::defaultDataSourceFilePath
             # ファイル保存
             [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
             [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
+            return $this
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    アプリデータソースXmlファイルパス取得
+    #>
+    [string] GetDataSourceXmlFilePath() {
+        try {
+            [string] $xPath = "/Configurations/DataSourceFilePath"
+            return $this.xmlDoc.SelectSingleNode($xPath).InnerText
+        } catch {
+            [Logger]::GetInstance().Debug($PSItem)
+            [Logger]::GetInstance().Debug("アプリデータソースXmlファイルパス取得に失敗しました。[$($this.filePath)]")
+            return $null
         }
     }
 }
@@ -169,7 +186,7 @@ class NodeTemplateXmlHelper {
     .SYNOPSIS
     コンストラクタ
     #>
-    Hidden ConfigXmlHelper() {}
+    Hidden NodeTemplateXmlHelper() {}
 
     <#
     .SYNOPSIS
@@ -188,14 +205,15 @@ class NodeTemplateXmlHelper {
     .SYNOPSIS
     初期設定
     #>
-    Initialize() {
+    [NodeTemplateXmlHelper] Initialize() {
         try {
             # テンプレートXmlは必ず存在する想定
             $this.xmlDoc = [XmlHelper]::GetInstance().ReadXmlWithStream($this.filePath)
-            return
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
             [Logger]::GetInstance().Debug("NodeTemplate.xml読み込みに失敗しました。[$($this.filePath)]")
+            return $this
         }
     }
 
@@ -215,6 +233,92 @@ class NodeTemplateXmlHelper {
             [Logger]::GetInstance().Debug($PSItem)
             [Logger]::GetInstance().Debug("NodeTemplate.xmlからノード取得に失敗しました。[$($this.filePath),${xPath}]")
             return $null
+        }
+    }
+}
+
+<#
+.SYNOPSIS
+アプリデータソースXmlヘルパクラス
+#>
+class DataSourceXmlHelper {
+    # シングルトン
+    Hidden static [DataSourceXmlHelper] $instance
+
+    # ファイルパス
+    Hidden [string] $filePath
+
+    # xml
+    Hidden [xml] $xmlDoc
+
+    <#
+    .SYNOPSIS
+    コンストラクタ
+    #>
+    Hidden DataSourceXmlHelper() {}
+
+    <#
+    .SYNOPSIS
+    インスタンス取得
+    #>
+    static [DataSourceXmlHelper] GetInstance() {
+        if($null -ne [DataSourceXmlHelper]::instance) {
+            return [DataSourceXmlHelper]::instance
+        }
+
+        [DataSourceXmlHelper]::instance = [DataSourceXmlHelper]::new()
+        return [DataSourceXmlHelper]::instance
+    }
+
+    <#
+    .SYNOPSIS
+    初期設定
+    #>
+    [DataSourceXmlHelper] Initialize() {
+        try {
+            # アプリデータソースXmlのファイルパス取得
+            [ConfigXmlHelper] $configXmlHelper = [ConfigXmlHelper]::GetInstance()
+            $configXmlHelper.Initialize()
+            $this.filePath = $configXmlHelper.GetDataSourceXmlFilePath()
+
+            if(Test-Path $this.filePath) {
+                # 存在する場合は読込を行う
+                $this.xmlDoc = [XmlHelper]::GetInstance().ReadXmlWithStream($this.filePath)
+                return $this
+            }
+            # 存在しない場合、ファイルを生成する
+            $this.xmlDoc = [System.Xml.XmlDocument]::new()
+            $this.xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", $null)
+            
+            # テンプレートXmlからノードを複製する
+            [NodeTemplateXmlHelper] $templateXmlHelper = [NodeTemplateXmlHelper]::GetInstance()
+            $templateXmlHelper.Initialize()
+            [string] $templateXPath = "//*[@TemplateName='DataSourceXml']"
+            $dataSourceNode = $templateXmlHelper.GetTemplateSingleNode($templateXPath)
+            $this.xmlDoc.AppendChild($this.xmlDoc.ImportNode($dataSourceNode, $true))
+            
+            # Sequenceに初期値を設定
+            [string] $sequenceXPath = "/Databases/Database/Definitions/Sequences"
+            $sequenceNode = $this.xmlDoc.SelectSingleNode($sequenceXPath)
+            $sequenceNode.SelectSingleNode("DatabaseID").InnerText = 0
+            $sequenceNode.SelectSingleNode("TableID").InnerText = 0
+            $sequenceNode.SelectSingleNode("RecordID").InnerText = 0
+
+            # データベースID設定
+            $this.xmlDoc.SelectSingleNode("/Databases/Database").Attributes.GetNamedItem("ID").Value = 0
+            $sequenceNode.SelectSingleNode("DatabaseID").InnerText = 1
+            
+            # TableDefinition, Tableノードの削除(テンプレートから複製したものが残っているため)
+            $this.xmlDoc.SelectSingleNode("/Databases/Database/Definitions/TableDefinitions").RemoveAll()
+            $this.xmlDoc.SelectSingleNode("/Databases/Database/Tables").RemoveAll()
+            
+            # ファイル保存
+            [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
+            return $this
+        } catch {
+            [Logger]::GetInstance().Debug($PSItem)
+            [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
+            return $this
         }
     }
 }
