@@ -30,9 +30,14 @@ class XamlCommonHelper {
 ApplicationXamlヘルパクラス
 #>
 class ApplicationXamlHelper {
+    # シングルトン
     Hidden static [ApplicationXamlHelper] $instance
+    # ApplicationXamlファイルパス
     Hidden [string] $filePath
+    # ApplicationXaml
     Hidden [xml] $appXaml
+    # Logger
+    Hidden [Logger] $logger = [Logger]::GetInstance()
 
     <#
     .Description
@@ -62,9 +67,9 @@ class ApplicationXamlHelper {
             $this.appXaml = Get-Content -Encoding UTF8 -Path $this.filePath
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
+            $this.logger.Debug($PSItem)
             $message = "ApplicationXamlの読み込みに失敗しました。[$($this.filePath)]"
-            [Logger]::GetInstance().Debug($message)
+            $this.logger.Debug($message)
             Write-Error -Message $message
             return $this
         }
@@ -96,12 +101,12 @@ class ApplicationXamlHelper {
                 $fullPath = Join-Path $currentPath $relativePath
                 $attributeSource.Value = $fullPath
             }
-            [Logger]::GetInstance().Debug("ResourceDictionaryの絶対パス変換が完了しました。")
+            $this.logger.Debug("ResourceDictionaryの絶対パス変換が完了しました。")
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
+            $this.logger.Debug($PSItem)
             $message = "ResourceDictionaryの属性Sourceの絶対パス変換に失敗しました。"
-            [Logger]::GetInstance().Debug($message)
+            $this.logger.Debug($message)
             Write-Error -Message $message
             return $this
         }
@@ -145,9 +150,9 @@ class WindowXamlHelper {
             $this.windowXaml = Get-Content -Encoding UTF8 -Path $this.filePath
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
+            $this.logger.Debug($PSItem)
             $message = "WindowXamlの読み込みに失敗しました。[$($this.filePath)]"
-            [Logger]::GetInstance().Debug($message)
+            $this.logger.Debug($message)
             Write-Error -Message $message
             return $this
         }
@@ -184,7 +189,7 @@ class WindowXamlHelper {
                 [System.Xml.XmlNode] $targetNode = $srcXaml.SelectSingleNode($srcXPath, $nsManager)
 
                 if($null -eq $targetNode) {
-                    [Logger]::GetInstance().Debug("${_}は${srcXPath}の定義が見つかりませんでした。")
+                    $this.logger.Debug("${_}は${srcXPath}の定義が見つかりませんでした。")
                     continue
                 }
                 $tabControlXPath = $destWindowXpath
@@ -193,9 +198,9 @@ class WindowXamlHelper {
             }
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
+            $this.logger.Debug($PSItem)
             $message = "${destWindowXpath}への${srcXPath}追加処理に失敗しました。"
-            [Logger]::GetInstance().Debug($message)
+            $this.logger.Debug($message)
             Write-Error -Message $message
             return $this
         }

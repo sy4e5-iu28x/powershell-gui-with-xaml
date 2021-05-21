@@ -5,7 +5,8 @@ using module ".\AsyncInvokeHelper.psm1"
 
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
-[AsyncManager]  $global:asyncManager
+# 非同期処理管理
+[AsyncManager] $global:asyncManager
 
 try{
     # ResourceDictionaryのSource絶対パス変換処理

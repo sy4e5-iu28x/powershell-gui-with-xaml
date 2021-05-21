@@ -1,4 +1,5 @@
-﻿using module ".\XmlHelper.psm1"
+﻿using module ".\LogHelper.psm1"
+using module ".\XmlHelper.psm1"
 using module ".\AsyncInvokeHelper.psm1"
 using module ".\DefaultDialog.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore

@@ -10,6 +10,8 @@ class XmlHelper {
     Hidden static [XmlHelper] $instance
     # テンプレートxml
     Hidden [xml] $templateXml
+    # Logger
+    Hidden [Logger] $logger = [Logger]::GetInstance()
 
     <#
     .SYNOPSIS
@@ -46,8 +48,8 @@ class XmlHelper {
             $xmlDoc.Load($fs)
             return $xmlDoc
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("Xml読み込みに失敗しました。[${srcFilePath}]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("Xml読み込みに失敗しました。[${srcFilePath}]")
             return $null
         } finally {
             $fs.Close()
@@ -77,8 +79,8 @@ class XmlHelper {
             $fs.Flush()
             
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[${srcXmlDoc}, ${destFilePath}]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("Xml書き込みに失敗しました。[${srcXmlDoc}, ${destFilePath}]")
         } finally {
             $fs.Close()
         }
@@ -92,12 +94,12 @@ class XmlHelper {
 class ConfigXmlHelper {
     # シングルトン
     Hidden static [ConfigXmlHelper] $instance
-
     # ファイルパス
     Hidden [string] $filePath = [AppParameters]::configXmlFilePath
-
     # xml
     Hidden [xml] $xmlDoc
+    # Logger
+    Hidden [Logger] $logger = [Logger]::GetInstance()
 
     <#
     .SYNOPSIS
@@ -146,8 +148,8 @@ class ConfigXmlHelper {
             [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
             return $this
         }
     }
@@ -161,8 +163,8 @@ class ConfigXmlHelper {
             [string] $xPath = "/Configurations/DataSourceFilePath"
             return $this.xmlDoc.SelectSingleNode($xPath).InnerText
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("アプリデータソースXmlファイルパス取得に失敗しました。[$($this.filePath)]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("アプリデータソースXmlファイルパス取得に失敗しました。[$($this.filePath)]")
             return $null
         }
     }
@@ -175,12 +177,12 @@ class ConfigXmlHelper {
 class NodeTemplateXmlHelper {
     # シングルトン
     Hidden static [NodeTemplateXmlHelper] $instance
-
     # ファイルパス
     Hidden [string] $filePath = [AppParameters]::templateFilePath
-
     # xml
     Hidden [xml] $xmlDoc
+    # Logger
+    Hidden [Logger] $logger = [Logger]::GetInstance()
 
     <#
     .SYNOPSIS
@@ -211,8 +213,8 @@ class NodeTemplateXmlHelper {
             $this.xmlDoc = [XmlHelper]::GetInstance().ReadXmlWithStream($this.filePath)
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("NodeTemplate.xml読み込みに失敗しました。[$($this.filePath)]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("NodeTemplate.xml読み込みに失敗しました。[$($this.filePath)]")
             return $this
         }
     }
@@ -230,8 +232,8 @@ class NodeTemplateXmlHelper {
             $targetNode.Attributes.RemoveNamedItem("TemplateName")
             return $targetNode
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("NodeTemplate.xmlからノード取得に失敗しました。[$($this.filePath),${xPath}]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("NodeTemplate.xmlからノード取得に失敗しました。[$($this.filePath),${xPath}]")
             return $null
         }
     }
@@ -253,12 +255,12 @@ enum TableDataType {
 class DataSourceXmlHelper {
     # シングルトン
     Hidden static [DataSourceXmlHelper] $instance
-
     # ファイルパス
     Hidden [string] $filePath
-
     # xml
     Hidden [xml] $xmlDoc
+    # Logger
+    Hidden [Logger] $logger = [Logger]::GetInstance()
 
     <#
     .SYNOPSIS
@@ -318,8 +320,8 @@ class DataSourceXmlHelper {
             [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
             return $this
         } catch {
-            [Logger]::GetInstance().Debug($PSItem)
-            [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
             return $this
         }
     }

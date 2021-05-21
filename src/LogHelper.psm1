@@ -3,13 +3,13 @@
 ログ出力クラス
 #>
 class Logger {
+    # シングルトン
+    Hidden static [Logger] $instance
     # ログファイル名
     Hidden $filename = "./logger_debug.log"
     # ログ名
     Hidden $logName = "DebugLog"
 
-    # シングルトン
-    Hidden static $instance
     <#
     .SYNOPSIS
     コンストラクタ
@@ -25,7 +25,7 @@ class Logger {
     .SYNOPSIS
     インスタンス取得処理
     #>
-    static [Logger]GetInstance() {
+    static [Logger] GetInstance() {
         if($null -ne [Logger]::instance) {
             return [Logger]::instance
         }
