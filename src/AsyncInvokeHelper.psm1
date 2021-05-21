@@ -120,6 +120,7 @@ class AsyncManager {
 
             # 使用するモジュールをすべて記述
             $psCmd.AddScript("using module ${PSScriptRoot}/LogHelper.psm1")
+            $psCmd.AddScript("using module ${PSScriptRoot}/XmlHelper.psm1")
             # ScriptBlock実行記述
             $psCmd.AddCommand("Invoke-Command")
             [System.Management.Automation.ScriptBlock]$sb = [System.Management.Automation.ScriptBlock]::Create($scriptBlock)

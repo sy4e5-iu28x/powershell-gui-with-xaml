@@ -1,10 +1,15 @@
 <Databases>
-  <Database ID="fa9a3425-e46b-494d-8aab-4d94c6f21041">
+  <Database ID="246b38a6-9d45-42b0-9ef8-0b426a4cf8cf">
     <Definitions>
       <TableDefinitions>
+        <TableDefinition ID="5e8b826b-eb5d-48be-93fd-91853f6494ad">
+          <Name>データ項目1</Name>
+          <DataType>Image</DataType>
+        </TableDefinition>
       </TableDefinitions>
     </Definitions>
     <Tables>
+      <Table ID="5e8b826b-eb5d-48be-93fd-91853f6494ad" />
     </Tables>
   </Database>
 </Databases>

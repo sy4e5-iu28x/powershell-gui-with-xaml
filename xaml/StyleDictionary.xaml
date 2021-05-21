@@ -47,7 +47,7 @@
                             CornerRadius="3"
                             Background="{StaticResource ResourceKey=ColorWhite}"/>
                         <Border x:Name="TextBoxBorderDarkLayer" BorderThickness="1.5"
-                            BorderBrush="{StaticResource ResourceKey=ColorGray400}"
+                            BorderBrush="{StaticResource ResourceKey=ColorGray700}"
                             Background="Transparent"
                             CornerRadius="3"
                             Opacity="1.0"/>
@@ -69,7 +69,7 @@
                             <Setter TargetName="TextBoxBorderDarkLayer" Property="Opacity" Value="0.0"/>
                         </Trigger>
                         <Trigger Property="IsFocused" Value="False">
-                            <Setter TargetName="TextBoxBorderDarkLayer" Property="Opacity" Value="0.9"/>
+                            <Setter TargetName="TextBoxBorderDarkLayer" Property="Opacity" Value="1.0"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -131,9 +131,8 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid>
                         <Border x:Name="BackgroundArea" Background="{StaticResource ResourceKey=ColorBlack}" 
-                            Opacity="0.0" BorderThickness="1.5" CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,5,10,5"/>
-                        </Border>
+                            Opacity="0.0" BorderThickness="1.5" CornerRadius="3"/>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,5,10,5"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">

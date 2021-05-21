@@ -1,8 +1,10 @@
 ﻿using module ".\LogHelper.psm1"
 using module ".\XmlHelper.psm1"
 using module ".\AsyncInvokeHelper.psm1"
-using module ".\DefaultDialog.psm1"
 using module ".\Window.psm1"
+using module ".\DefinitionTabItem.psm1"
+using module ".\DefaultDialog.psm1"
+using module ".\EditDefinitionDialog.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -40,6 +42,7 @@ function Initialize-XamlDialogs {
     param([WindowXamlHelper] $windowXamlHelper)
     $dialogTabXamlFilePaths = @(
         ".\xaml\dialogs\DefaultTabItem.xaml"
+        ".\xaml\dialogs\EditDefinitionTabItem.xaml"
     )
     $windowXamlHelper.ApplyDialogs($dialogTabXamlFilePaths)
     return $windowXamlHelper
@@ -79,5 +82,8 @@ function Initialize-AsyncManager {
 function Initialize-WindowComponents {
     param([AsyncManager]$asyncManager)
     Initialize-Window -asyncManager $asyncManager
+    Initialize-DefinitionTabItem -asyncManager $asyncManager
     Initialize-DefaultDialog -asyncManager $asyncManager
+    Initialize-EditDefinitionDialog -asyncManager $asyncManager
+    
 }

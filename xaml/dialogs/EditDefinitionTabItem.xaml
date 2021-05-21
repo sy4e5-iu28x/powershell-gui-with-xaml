@@ -1,0 +1,54 @@
+<!-- デフォルトダイアログ -->
+<TabItem
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="EditDefinitionDialog"
+    Width="700"
+    Height="300"
+    Visibility="Collapsed">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="EditDefinitionTitle" FontSize="25" Grid.Row="0" Grid.Column="0"></TextBlock>
+        <TextBlock x:Name="EditDefinitionMessage" FontSize="21" Grid.Row="1" Grid.Column="0"></TextBlock>
+        <StackPanel Orientation="Vertical">
+            <TextBlock FontSize="21" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0">項目名</TextBlock>
+            <TextBox
+                Grid.Column="0"
+                Grid.Row="0"
+                Style="{StaticResource ResourceKey=StyleTextBox}"
+                x:Name="DefinitionNameTextBox"
+                Tag="入力"/>
+            <TextBlock FontSize="21" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0">データ型</TextBlock>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource ResourceKey=ColorGray200}" CornerRadius="3"/>
+                <RadioButton Grid.Column="0" x:Name="EditDefinitionDialogDataTypeText" Style="{StaticResource ResourceKey=StyleRadioButton}" Content="テキスト"/>
+                <RadioButton Grid.Column="1" x:Name="EditDefinitionDialogDataTypeImage" Style="{StaticResource ResourceKey=StyleRadioButton}" Content="画像"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+            <Button Style="{StaticResource ResourceKey=StyleButton}"
+                x:Name="EditDefinitionDialogOkButton"
+                Content="保存"
+                Background="{StaticResource ResourceKey=ColorYellow600}" />
+            <Button Style="{StaticResource ResourceKey=StyleButton}"
+                x:Name="EditDefinitionDialogCancelButton"
+                Content="キャンセル"
+                Background="{StaticResource ResourceKey=ColorGray500}" />
+        </StackPanel>
+    </Grid>
+</TabItem>
