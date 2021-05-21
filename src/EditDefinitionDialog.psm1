@@ -41,20 +41,15 @@ function Initialize-EditDefinitionDialog {
         $scriptblock = {
             param($asyncParamObject)
             # パラメタ生成時の変数名を参照
-            try {
+            try { 
                 [DataSourceXmlHelper] $dataSourceXmlHelper = [DataSourceXmlHelper]::GetInstance().Initialize()
                 if([System.String]::Empty -eq $asyncParamObject.Guid) {
-                    # 新規登録
+                    # XML新規登録
                     $dataSourceXmlHelper.AddTableDefinition($asyncParamObject.TableName, $asyncParamObject.DataType)
                 } else {
-                    # 更新処理
+                    # XML更新処理
                     $dataSourceXmlHelper.UpdateTableDefinition($asyncParamObject.Guid, $asyncParamObject.TableName, $asyncParamObject.DataType)
-                    $targetlistitem = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).ItemsSource |
-                     Where-Object {$_.Guid -eq $asyncParamObject.Guid}
-                    $targetlistitem.Name = $asyncParamObject.TableName
-                    $targetlistitem.DataType = $asyncParamObject.DataType
                 }
-                
             } catch {
                 [Logger]::GetInstance().Debug($PSItem)
                 [Logger]::GetInstance().Debug("非同期スクリプトブロック処理実行に失敗しました。")
