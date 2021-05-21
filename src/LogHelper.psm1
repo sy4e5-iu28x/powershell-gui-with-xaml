@@ -47,27 +47,35 @@ class Logger {
 
     <#
     .SYNOPSIS
-    デバッグログ出力(オブジェクト)
-
-    .PARAMETER object
-    対象のオブジェクト
-    #>
-    Debug([System.Object]$object) {
-        [System.Diagnostics.Debug]::WriteLine($object.ToString())
-    }
-
-    <#
-    .SYNOPSIS
     デバッグログ出力(例外情報出力)
 
     .PARAMETER errorRecord
     例外情報
     #>
     Debug([System.Management.Automation.ErrorRecord]$errorRecord) {
-        $this.Debug($PSItem.Exception.InnerException)
-        $this.Debug($PSItem.ScriptStackTrace)
-        $this.Debug($PSItem.Exception.StackTrace) 
-        $this.Debug($PSItem.Exception.Message)
-        $this.Debug($PSItem.InvocationInfo)
+        if($null -eq $errorRecord) {
+            [System.Diagnostics.Debug]::WriteLine($null)
+            return
+        }
+        $this.Debug($errorRecord.Exception.InnerException)
+        $this.Debug($errorRecord.ScriptStackTrace)
+        $this.Debug($errorRecord.Exception.StackTrace) 
+        $this.Debug($errorRecord.Exception.Message)
+        $this.Debug($errorRecord.InvocationInfo)
+    }
+
+    <#
+    .SYNOPSIS
+    デバッグログ出力(オブジェクト)
+
+    .PARAMETER object
+    対象のオブジェクト
+    #>
+    Debug([System.Object]$object) {
+        if($null -eq $object) {
+            [System.Diagnostics.Debug]::WriteLine($null)
+            return
+        }
+        [System.Diagnostics.Debug]::WriteLine($object.ToString())
     }
 }
