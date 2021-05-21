@@ -22,8 +22,8 @@ class XamlCommonHelper {
 ApplicationXamlヘルパクラス
 #>
 class ApplicationXamlHelper {
-    [string] $filePath
-    [xml] $appXaml
+    Hidden [string] $filePath
+    Hidden [xml] $appXaml
 
     <#
     .Description
