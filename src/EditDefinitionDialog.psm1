@@ -32,13 +32,29 @@ function Initialize-EditDefinitionDialog {
             $tableDataType = [TableDataType]::Image
         }
         Add-Member -InputObject $param -MemberType NoteProperty -Name "DataType" -Value $tableDataType
+        
+        # Guid (空文字の場合は、新規登録。値がある場合は更新)
+        [string] $guid = ([System.Windows.Controls.TextBlock] $asyncManager.GetWindowControl("DefinitionGuidTextBlock")).Text
+        Add-Member -InputObject $param -MemberType NoteProperty -Name "Guid" -Value $guid
 
-        # 処理
+        # 非同期処理
         $scriptblock = {
             param($asyncParamObject)
+            # パラメタ生成時の変数名を参照
             try {
-                # パラメタ生成時の変数名を参照
-                [DataSourceXmlHelper]::GetInstance().Initialize().AddTable($asyncParamObject.TableName, $asyncParamObject.DataType)
+                [DataSourceXmlHelper] $dataSourceXmlHelper = [DataSourceXmlHelper]::GetInstance().Initialize()
+                if([System.String]::Empty -eq $asyncParamObject.Guid) {
+                    # 新規登録
+                    $dataSourceXmlHelper.AddTableDefinition($asyncParamObject.TableName, $asyncParamObject.DataType)
+                } else {
+                    # 更新処理
+                    $dataSourceXmlHelper.UpdateTableDefinition($asyncParamObject.Guid, $asyncParamObject.TableName, $asyncParamObject.DataType)
+                    $targetlistitem = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).ItemsSource |
+                     Where-Object {$_.Guid -eq $asyncParamObject.Guid}
+                    $targetlistitem.Name = $asyncParamObject.TableName
+                    $targetlistitem.DataType = $asyncParamObject.DataType
+                }
+                
             } catch {
                 [Logger]::GetInstance().Debug($PSItem)
                 [Logger]::GetInstance().Debug("非同期スクリプトブロック処理実行に失敗しました。")

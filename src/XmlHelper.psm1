@@ -40,7 +40,7 @@ class XmlHelper {
         try {
             # 読み込み
             $fs = [System.IO.File]::Open($srcFilePath, `
-                [System.IO.FileMode]::OpenOrCreate, `
+                [System.IO.FileMode]::Open, `
                 [System.IO.FileAccess]::Read, `
                 [System.IO.FileShare]::Read)
             
@@ -58,7 +58,7 @@ class XmlHelper {
 
     <#
     .SYNOPSIS
-    XML読込処理(ストリーム)
+    XML書込処理(ストリーム)
 
     .PARAMETER srcXmlDoc
     保存XmlDocument
@@ -71,10 +71,9 @@ class XmlHelper {
         try {
             # 書き込み
             $fs = [System.IO.File]::Open($destFilePath, `
-                [System.IO.FileMode]::OpenOrCreate, `
+                [System.IO.FileMode]::Create, `
                 [System.IO.FileAccess]::ReadWrite, `
                 [System.IO.FileShare]::Read)
-    
             $srcXmlDoc.Save($fs)
             $fs.Flush()
             
@@ -133,8 +132,9 @@ class ConfigXmlHelper {
             }
             # 存在しない場合、ファイルを生成する
             $this.xmlDoc = [System.Xml.XmlDocument]::new()
-            $this.xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", $null)
-            
+            [System.Xml.XmlDeclaration] $xmlDecl = $this.xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", $null)
+            $this.xmlDoc.InsertBefore($xmlDecl, $this.xmlDoc.DocumentElement)
+
             # テンプレートXmlからノードを複製する
             [NodeTemplateXmlHelper] $templateXmlHelper = [NodeTemplateXmlHelper]::GetInstance()
             $templateXmlHelper.Initialize()
@@ -299,7 +299,8 @@ class DataSourceXmlHelper {
             }
             # 存在しない場合、ファイルを生成する
             $this.xmlDoc = [System.Xml.XmlDocument]::new()
-            $this.xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", $null)
+            [System.Xml.XmlDeclaration] $xmlDecl = $this.xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", $null)
+            $this.xmlDoc.InsertBefore($xmlDecl, $this.xmlDoc.DocumentElement)
             
             # テンプレートXmlからノードを複製する
             [NodeTemplateXmlHelper] $templateXmlHelper = [NodeTemplateXmlHelper]::GetInstance()
@@ -336,7 +337,7 @@ class DataSourceXmlHelper {
     .PARAMETER dataType
     データタイプ
     #>
-    AddTable([string] $tableName, [TableDataType]$dataType) {
+    AddTableDefinition([string] $tableName, [TableDataType]$dataType) {
         try{
             # テンプレートXmlヘルパクラス
             [NodeTemplateXmlHelper] $templateXmlHelper = [NodeTemplateXmlHelper]::GetInstance().Initialize()
@@ -371,10 +372,61 @@ class DataSourceXmlHelper {
 
             # ファイルへ反映
             [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
-            $this.logger.Debug("テーブル追加しました。[${tableName},${dataType},${templateDataSourceNode}]")
+            $this.logger.Debug("テーブル定義を追加しました。[${tableName},${dataType},${templateDataSourceNode}]")
         } catch {
             $this.logger.Debug($PSItem)
-            $this.logger.Debug("テーブル追加に失敗しました。[${tableName},${dataType}]")
+            $this.logger.Debug("テーブル定義追加に失敗しました。[${tableName},${dataType}]")
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    テーブル定義更新
+    #>
+    UpdateTableDefinition([string] $guid, [string] $tableName, [TableDataType] $dataType) {
+        try {
+            $this.logger.Debug("テーブル定義更新を開始します。[${guid},${tableName},${dataType}]")
+            # Guidで抽出
+            $tableDefinitionXPath = "/Databases/Database/Definitions/TableDefinitions/TableDefinition[@ID='${guid}']"
+            [System.Xml.XmlNode] $targetNode = $this.xmlDoc.SelectSingleNode($tableDefinitionXPath)
+            # テーブル名
+            $targetNode.SelectSingleNode("Name").InnerText = $tableName
+            # データ型
+            $targetNode.SelectSingleNode("DataType").InnerText = $dataType
+            # ファイルへ反映
+            [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
+            $this.logger.Debug("テーブル定義を更新しました。[${guid},${tableName},${dataType}]")
+        } catch {
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("テーブル定義更新に失敗しました。[${guid},${tableName},${dataType}]")
+        }
+    }
+
+    <#
+    .SYNOPSIS
+    テーブル定義一覧取得
+    #>
+    [System.Collections.ArrayList] GetTableDefinitionList() {
+        try {
+            [System.Collections.ArrayList]$results = [System.Collections.ArrayList]::new()
+            [string] $xPath = "/Databases/Database/Definitions/TableDefinitions/TableDefinition"
+            [System.Xml.XmlNodeList] $nodeList = $this.xmlDoc.SelectNodes($xPath)
+            $nodeList | ForEach-Object {
+                [string] $tableName = ([System.Xml.XmlNode]$_).SelectSingleNode("Name").InnerText
+                [string] $dataType = ([System.Xml.XmlNode]$_).SelectSingleNode("DataType").InnerText
+                [string] $guid = ([System.Xml.XmlNode]$_).Attributes.GetNamedItem("ID").Value
+
+                [pscustomobject] $item = New-Object psobject
+                Add-Member -InputObject $item -MemberType NoteProperty -Name "Name" -Value $tableName
+                Add-Member -InputObject $item -MemberType NoteProperty -Name "DataType" -Value $dataType
+                Add-Member -InputObject $item -MemberType NoteProperty -Name "Guid" -Value $guid
+                $results.Add($item)
+            }
+            return $results
+        } catch {
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("テーブル一覧取得に失敗しました。")
+            return $null
         }
     }
 

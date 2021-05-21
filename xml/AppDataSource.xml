@@ -1,20 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Databases>
-  <Database ID="246b38a6-9d45-42b0-9ef8-0b426a4cf8cf">
+  <Database ID="85c882e7-f7cd-4f4f-9e28-6bb36de0f678">
     <Definitions>
       <TableDefinitions>
-        <TableDefinition ID="5e8b826b-eb5d-48be-93fd-91853f6494ad">
-          <Name>データ項目1</Name>
+        <TableDefinition ID="3318ad15-4e32-47fe-bdf3-f5cfe287c105">
+          <Name>識別子1</Name>
           <DataType>Image</DataType>
         </TableDefinition>
-        <TableDefinition ID="dfdf2dd7-bad6-49ff-b5f6-eef4c1cd546e">
-          <Name>テスト2</Name>
+        <TableDefinition ID="34cea9cd-f30d-4b64-bd5a-394e30996697">
+          <Name>Item2</Name>
+          <DataType>Image</DataType>
+        </TableDefinition>
+        <TableDefinition ID="e4723032-1c63-49dc-afad-983c54b8af18">
+          <Name>項目名3</Name>
           <DataType>Text</DataType>
+        </TableDefinition>
+        <TableDefinition ID="87110c27-b121-415b-9a25-daa0df3e8d98">
+          <Name>項目名4-3</Name>
+          <DataType>Image</DataType>
         </TableDefinition>
       </TableDefinitions>
     </Definitions>
     <Tables>
-      <Table ID="5e8b826b-eb5d-48be-93fd-91853f6494ad" />
-      <Table ID="dfdf2dd7-bad6-49ff-b5f6-eef4c1cd546e" />
+      <Table ID="3318ad15-4e32-47fe-bdf3-f5cfe287c105" />
+      <Table ID="34cea9cd-f30d-4b64-bd5a-394e30996697" />
+      <Table ID="e4723032-1c63-49dc-afad-983c54b8af18" />
+      <Table ID="87110c27-b121-415b-9a25-daa0df3e8d98" />
     </Tables>
   </Database>
 </Databases>
