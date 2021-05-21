@@ -152,4 +152,46 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- リストビュー要素コンテナー -->
+    <Style x:Key="StyleListViewItemContainer" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Grid>
+                        <Border  
+                            x:Name="ItemBackground"
+                            CornerRadius="3" 
+                            Margin="5" 
+                            BorderThickness="0" 
+                            Background="{StaticResource ResourceKey=ColorGray300}"/>
+                        <!-- 背景レイヤー -->
+                        <Border  
+                            x:Name="ItemBackgroundLayer"
+                            CornerRadius="{Binding ElementName=ItemBackground, Path=CornerRadius}" 
+                            Margin="{Binding ElementName=ItemBackground, Path=Margin}" 
+                            BorderThickness="{Binding ElementName=ItemBackground, Path=BorderThickness}" 
+                            Background="{StaticResource ResourceKey=ColorBlack}"
+                            Opacity="0.3"/>
+                        <ContentPresenter
+                            TextBlock.FontSize="21"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="False"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.1"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

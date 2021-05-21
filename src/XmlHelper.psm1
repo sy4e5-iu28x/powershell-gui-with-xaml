@@ -239,6 +239,15 @@ class NodeTemplateXmlHelper {
 
 <#
 .SYNOPSIS
+Tableデータ型Enum
+#>
+enum TableDataType {
+    Text = 0
+    Image = 1
+}
+
+<#
+.SYNOPSIS
 アプリデータソースXmlヘルパクラス
 #>
 class DataSourceXmlHelper {
@@ -313,5 +322,76 @@ class DataSourceXmlHelper {
             [Logger]::GetInstance().Debug("Xml書き込みに失敗しました。[$($this.xmlDoc)], $($this.filePath)]")
             return $this
         }
+    }
+
+    <#
+    .SYNOPSIS
+    テーブル追加
+
+    .PARAMETER tableName
+    テーブル名
+
+    .PARAMETER dataType
+    データタイプ
+    #>
+    AddTable([string] $tableName, [TableDataType]$dataType) {
+        # テンプレートXmlヘルパクラス
+        [NodeTemplateXmlHelper] $templateXmlHelper = [NodeTemplateXmlHelper]::GetInstance().Initialize()
+
+        # ID発番
+        $tableID = New-Guid
+
+        # TableDefinitionsノード(テーブル定義ノード)
+        $tableDefinitionXPath = "/Databases/Database/Definitions/TableDefinitions/TableDefinition"
+        [System.Xml.XmlNode] $newTableDefinitionNode = $templateXmlHelper.GetTemplateSingleNode($tableDefinitionXPath)
+        $newTableDefinitionNode.Attributes.GetNamedItem("ID").Value = $tableID
+        # テーブル名
+        $newTableDefinitionNode.SelectSingleNode("Name").InnerText = $tableName
+        # データ型
+        $newTableDefinitionNode.SelectSingleNode("DataType").InnerText = $dataType.ToString()
+
+        $destTableDefinitionsNode = $this.xmlDoc.SelectSingleNode("/Databases/Database/Definitions/TableDefinitions")
+        $destTableDefinitionsNode.AppendChild($this.xmlDoc.ImportNode($newTableDefinitionNode, $true))
+
+        # Tableノード(レコード格納ノード)
+        $tableXpath = "/Databases/Database/Tables/Table"
+        [System.Xml.XmlNode] $newTableNode = $templateXmlHelper.GetTemplateSingleNode($tableXpath)
+        $newTableNode.Attributes.GetNamedItem("ID").Value = $tableID
+
+        $destTableNode = $this.xmlDoc.SelectSingleNode("/Databases/Database/Tables")
+        $destTableNode.AppendChild($this.xmlDoc.ImportNode($newTableNode, $true))
+
+        # ファイルへ反映
+        [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
+    }
+
+    <#
+    .SYNOPSIS
+    テーブル追加
+
+    .PARAMETER psObject
+    PSCustomObject
+    #>
+    AddRecord([pscustomobject] $psObject) {
+        # レコード発番
+        $newRecordID = New-Guid
+        # 保有するすべてのメンバの値を追加する
+        $psObject | Get-Member -MemberType NoteProperty | ForEach-Object {
+            # メンバー名
+            $memberName = $_
+            # メンバー名と同一のテーブルをTableDefinitionsから探し、テーブルIDを照会する
+            $tableDefinitionNode = $this.xmlDoc.SelectSingleNode("/Databases/Database/Definitions/TableDefinitions/TableDefinition/Name[text()='${memberName}']/..")
+            $tableID = $tableDefinitionNode.Attributes.GetNamedItem("ID").Value
+            # テーブルIDから、Recordノード追加先のTableノードを取得する
+            $tableNode = $this.xmlDoc.SelectSingleNode("/Databases/Database/Tables/Table[@ID='${tableID}']")
+            
+            #レコードノードに発番したレコードIDを設定し、値を設定し、追加する
+            $newRecordNode = [NodeTemplateXmlHelper]::GetInstance().Initialize().GetTemplateSingleNode("/Databases/Database/Tables/Table/Record")
+            $newRecordNode.Attributes.GetNamedItem("ID").Value = $newRecordID
+            $newRecordNode.InnerText = $psObject.$memberName
+            $tableNode.AppendChild($this.xmlDoc.ImportNode($newRecordNode, $true))
+        }
+        # すべて追加した後、ファイルへ反映する
+        [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
     }
 }

@@ -1,4 +1,5 @@
 ﻿using module ".\LogHelper.psm1"
+using module ".\Parameters.psm1"
 
 <#
 .SYNOPSIS
@@ -29,40 +30,65 @@ class XamlCommonHelper {
 ApplicationXamlヘルパクラス
 #>
 class ApplicationXamlHelper {
+    Hidden static [ApplicationXamlHelper] $instance
     Hidden [string] $filePath
     Hidden [xml] $appXaml
 
     <#
     .Description
     コンストラクタ
-
-    .PARAMETER xamlFilePath
-    対象のapp.xamlファイルパス
     #>
-    ApplicationXamlHelper([string] $xamlFilePath) {
-        $this.filePath = $xamlFilePath
+    Hidden ApplicationXamlHelper() {}
+
+    <#
+    .Description
+    インスタンス取得
+    #>
+    static [ApplicationXamlHelper] GetInstance() {
+        if($null -ne [ApplicationXamlHelper]::instance) {
+            return [ApplicationXamlHelper]::instance
+        }
+        [ApplicationXamlHelper]::instance = [ApplicationXamlHelper]::new()
+        return [ApplicationXamlHelper]::instance
+    }
+
+    <#
+    .Description
+    初期設定
+    #>
+    [ApplicationXamlHelper] Initialize() {
+        $this.filePath = [AppParameters]::appXamlFilePath
         try {
             $this.appXaml = Get-Content -Encoding UTF8 -Path $this.filePath
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
-            $message = "ApplicationXamlの読み込みに失敗しました。[${xamlFilePath}]"
+            $message = "ApplicationXamlの読み込みに失敗しました。[$($this.filePath)]"
             [Logger]::GetInstance().Debug($message)
             Write-Error -Message $message
+            return $this
         }
+    }
+
+    <#
+    .SYNOPSIS
+    XmlDocumentを取得する
+    #>
+    [xml] GetXmlDocument() {
+        return $this.appXaml
     }
 
     <#
     .SYNOPSIS
     ResourceDictionaryのSourceを絶対パスに変換する
     #>
-    [xml] ApplyResourceDicSouce() {
+    [ApplicationXamlHelper] ApplyResourceDicSouce() {
         try {
             $xPath = "/ns:Application/ns:Application.Resources/ns:ResourceDictionary/ns:ResourceDictionary.MergedDictionaries/ns:ResourceDictionary"
             [System.Xml.XmlNamespaceManager]$nsManager = [XamlCommonHelper]::CreateXamlNsManager($this.filePath)
 
             # 相対パスを絶対パスに変換する
             [System.Xml.XmlNodeList] $tabItemNodes = $this.appXaml.SelectNodes($xPath, $nsManager)
-            [Logger]::GetInstance().Debug("TabItem:${tabItemNodes}")
             $tabItemNodes | ForEach-Object {
                 $attributeSource = ([System.Xml.XmlNode]$_).Attributes.GetNamedItem("Source")
                 $relativePath = $attributeSource.Value
@@ -70,13 +96,14 @@ class ApplicationXamlHelper {
                 $fullPath = Join-Path $currentPath $relativePath
                 $attributeSource.Value = $fullPath
             }
-            return $this.appXaml
+            [Logger]::GetInstance().Debug("ResourceDictionaryの絶対パス変換が完了しました。")
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
             $message = "ResourceDictionaryの属性Sourceの絶対パス変換に失敗しました。"
             [Logger]::GetInstance().Debug($message)
             Write-Error -Message $message
-            return $null
+            return $this
         }
     }
 }
@@ -86,26 +113,52 @@ class ApplicationXamlHelper {
 WindowXamlヘルパクラス
 #>
 class WindowXamlHelper {
+    Hidden static [WindowXamlHelper] $instance
     Hidden [string] $filePath
     Hidden [xml] $windowXaml
 
     <#
     .Description
     コンストラクタ
-
-    .PARAMETER xamlFilePath
-    対象のapp.xamlファイルパス
     #>
-    WindowXamlHelper([string] $xamlFilePath) {
-        $this.filePath = $xamlFilePath
+    Hidden WindowXamlHelper() {}
+
+    <#
+    .Description
+    インスタンス取得
+    #>
+    static [WindowXamlHelper] GetInstance() {
+        if($null -ne [WindowXamlHelper]::instance) {
+            return [WindowXamlHelper]::instance
+        }
+        [WindowXamlHelper]::instance = [WindowXamlHelper]::new()
+        return [WindowXamlHelper]::instance
+    }
+
+    <#
+    .Description
+    初期設定
+    #>
+    [WindowXamlHelper] Initialize() {
+        $this.filePath = [AppParameters]::windowXamlFilePath
         try {
             $this.windowXaml = Get-Content -Encoding UTF8 -Path $this.filePath
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
-            $message = "WindowXamlの読み込みに失敗しました。[${xamlFilePath}]"
+            $message = "WindowXamlの読み込みに失敗しました。[$($this.filePath)]"
             [Logger]::GetInstance().Debug($message)
             Write-Error -Message $message
+            return $this
         }
+    }
+
+    <#
+    .SYNOPSIS
+    XmlDocumentを取得する
+    #>
+    [xml] GetXmlDocument() {
+        return $this.windowXaml
     }
 
     <#
@@ -121,7 +174,7 @@ class WindowXamlHelper {
     .PARAMETER destWindowXpath
     追加先のWindow.xaml内のXPath
     #>
-    Hidden [xml] ApplyFromTo([string[]] $srcFilePaths, [string] $srcXPath, [string] $destWindowXpath) {
+    Hidden [WindowXamlHelper] ApplyFromTo([string[]] $srcFilePaths, [string] $srcXPath, [string] $destWindowXpath) {
         try {
             [System.Xml.XmlNamespaceManager]$nsManager = [XamlCommonHelper]::CreateXamlNsManager($this.filePath)
             
@@ -138,13 +191,13 @@ class WindowXamlHelper {
                 $dest = $this.windowXaml.SelectSingleNode($tabControlXPath, $nsManager)
                 $dest.AppendChild($this.windowXaml.ImportNode($targetNode, $true))
             }
-            return $this.windowXaml
+            return $this
         } catch {
             [Logger]::GetInstance().Debug($PSItem)
             $message = "${destWindowXpath}への${srcXPath}追加処理に失敗しました。"
             [Logger]::GetInstance().Debug($message)
             Write-Error -Message $message
-            return $null
+            return $this
         }
     }
 
@@ -155,10 +208,11 @@ class WindowXamlHelper {
     .PARAMETER xamlFilePathCollection
     対象のxamlファイルパスのstring配列
     #>
-    [xml] ApplyWindowTabs([string[]] $xamlFilePathCollection) {
+    [WindowXamlHelper] ApplyWindowTabs([string[]] $xamlFilePathCollection) {
         $srcXPath = "/ns:TabItem"
         $destWindowXPath = "//*[@x:Name='WindowTabControl']"
-        return $this.ApplyFromTo($xamlFilePathCollection, $srcXPath, $destWindowXPath)
+        $this.ApplyFromTo($xamlFilePathCollection, $srcXPath, $destWindowXPath)
+        return $this
     }
 
     <#
@@ -168,9 +222,20 @@ class WindowXamlHelper {
     .PARAMETER xamlFilePathCollection
     対象のxamlファイルパスのstring配列
     #>
-    [xml] ApplyDialogs([string[]] $xamlFilePathCollection) {
+    [WindowXamlHelper] ApplyDialogs([string[]] $xamlFilePathCollection) {
         $srcXPath = "/ns:TabItem"
         $destWindowXPath = "//*[@x:Name='DialogTabControl']"
-        return $this.ApplyFromTo($xamlFilePathCollection, $srcXPath, $destWindowXPath)
+        $this.ApplyFromTo($xamlFilePathCollection, $srcXPath, $destWindowXPath)
+        return $this
+    }
+
+    <#
+    .SYNOPSIS
+    x:Name属性のついたすべてのノードを取得する。
+    #>
+    [System.Xml.XmlNodeList] GetAllXNamedNode() {
+        $nsManager = [XamlCommonHelper]::CreateXamlNsManager($this.filePath)
+        [string] $xPath = "//*[@x:Name !='']"
+        return $this.windowXaml.SelectNodes($xPath, $nsManager)
     }
 }
