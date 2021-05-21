@@ -172,7 +172,7 @@
                             Margin="{Binding ElementName=ItemBackground, Path=Margin}" 
                             BorderThickness="{Binding ElementName=ItemBackground, Path=BorderThickness}" 
                             Background="{StaticResource ResourceKey=ColorBlack}"
-                            Opacity="0.3"/>
+                            Opacity="0.2"/>
                         <ContentPresenter
                             TextBlock.FontSize="21"
                             HorizontalAlignment="Center"
@@ -180,7 +180,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.5"/>
+                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.3"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

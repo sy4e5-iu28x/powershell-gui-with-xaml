@@ -6,10 +6,15 @@
           <Name>データ項目1</Name>
           <DataType>Image</DataType>
         </TableDefinition>
+        <TableDefinition ID="dfdf2dd7-bad6-49ff-b5f6-eef4c1cd546e">
+          <Name>テスト2</Name>
+          <DataType>Text</DataType>
+        </TableDefinition>
       </TableDefinitions>
     </Definitions>
     <Tables>
       <Table ID="5e8b826b-eb5d-48be-93fd-91853f6494ad" />
+      <Table ID="dfdf2dd7-bad6-49ff-b5f6-eef4c1cd546e" />
     </Tables>
   </Database>
 </Databases>

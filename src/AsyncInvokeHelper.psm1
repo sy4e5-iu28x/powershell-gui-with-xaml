@@ -42,7 +42,7 @@ class AsyncManager {
         try {
             # 非同期スレッドから参照できる変数を追加
             [System.Management.Automation.Runspaces.SessionStateVariableEntry] $variable =
-                [System.Management.Automation.Runspaces.SessionStateVariableEntry]::new('syncControlTable', $this.syncControlTable, $null)
+                [System.Management.Automation.Runspaces.SessionStateVariableEntry]::new('asyncManager', $this, $null)
             [System.Management.Automation.Runspaces.InitialSessionState] $initialSessionState = 
                 [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
             $initialSessionState.Variables.Add($variable)
