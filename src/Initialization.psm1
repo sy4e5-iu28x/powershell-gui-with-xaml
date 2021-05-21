@@ -2,6 +2,7 @@
 using module ".\XmlHelper.psm1"
 using module ".\AsyncInvokeHelper.psm1"
 using module ".\DefaultDialog.psm1"
+using module ".\Window.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -77,5 +78,6 @@ function Initialize-AsyncManager {
 #>
 function Initialize-WindowComponents {
     param([AsyncManager]$asyncManager)
+    Initialize-Window -asyncManager $asyncManager
     Initialize-DefaultDialog -asyncManager $asyncManager
 }

@@ -9,14 +9,14 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 #>
 function Initialize-DefaultDialog {
     param([AsyncManager] $asyncManager)
-    # キャンセルボタン_Click
-    ([System.Windows.Controls.Button]$asyncManager.GetWindowControl("DefaultDialogCancelButton")).Add_Click({
+    # キャンセルボタン Click
+    ([System.Windows.Controls.Button] $asyncManager.GetWindowControl("DefaultDialogCancelButton")).Add_Click({
         ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Collapsed"
         [Logger]::GetInstance().Debug("同期処理からログに出力しました。")
     })
 
-    # OKボタン_Click
-    ([System.Windows.Controls.Button]$asyncManager.GetWindowControl("DefaultDialogOkButton")).Add_Click({
+    # OKボタン Click
+    ([System.Windows.Controls.Button] $asyncManager.GetWindowControl("DefaultDialogOkButton")).Add_Click({
         # パラメタ
         [pscustomobject] $param = New-Object psobject
         Add-Member -InputObject $param -MemberType NoteProperty -Name "SampleParam" -Value "パラメタ値です"
@@ -26,7 +26,6 @@ function Initialize-DefaultDialog {
             param($asyncParamObject)
             try {
                 [Logger]::GetInstance().Debug("非同期処理からログに出力しました。[$($asyncParamObject.SampleParam)]")
-
             } catch {
                 [Logger]::GetInstance().Debug($PSItem)
                 [Logger]::GetInstance().Debug("非同期スクリプトブロック処理実行に失敗しました。")

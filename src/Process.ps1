@@ -7,6 +7,7 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 # 非同期処理管理
 [AsyncManager] $global:asyncManager
+[Logger]$logger = [Logger]::GetInstance()
 
 try{
     # ResourceDictionaryのSource絶対パス変換処理
@@ -14,7 +15,7 @@ try{
     
     [System.Xml.XmlNodeReader] $appReader = [System.Xml.XmlNodeReader]::new($appXaml)
     [System.Windows.Application] $app = [System.Windows.Markup.XamlReader]::Load($appReader)
-    [Logger]::GetInstance().Debug("ApplicationインスタンスのLoadが完了しました。")
+    $logger.Debug("ApplicationインスタンスのLoadが完了しました。")
 
     [WindowXamlHelper] $windowXamlHelper = [WindowXamlHelper]::GetInstance().Initialize()
     # WindowTab定義の動的追加処理
@@ -25,7 +26,7 @@ try{
     [xml] $windowXaml = $windowXamlHelper.GetXmlDocument()
     [System.Xml.XmlNodeReader] $windowReader = [System.Xml.XmlNodeReader]::new($windowXaml)
     [System.Windows.Window] $window = [System.Windows.Markup.XamlReader]::Load($windowReader)
-    [Logger]::GetInstance().Debug("WindowインスタンスのLoadが完了しました。")
+    $logger.Debug("WindowインスタンスのLoadが完了しました。")
     
     # アプリ関連ファイル初期設定
     Initialize-AppFiles
@@ -46,8 +47,9 @@ try{
     # ウィンドウ表示
     $app.run($window)
 } catch {
-    [Logger]::GetInstance().Debug($PSItem)
+    $logger.Debug($PSItem)
 } finally {
     # 非同期RunspacePool終了
     $global:asyncManager.CloseRunspacePool()
+    $logger.Close()
 }

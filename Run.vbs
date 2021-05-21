@@ -16,6 +16,8 @@ Dim currentDir
 Dim srcDir
 'ps1ファイルパス
 Dim ps1Path
+'PowerShellコマンド
+Dim psCmd
 
 '.vbsと.ps1が同じディレクトリにある前提
 vbsSelfPath = Wscript.ScriptFullName
@@ -23,11 +25,11 @@ currentDir = objFSO.GetFile(vbsSelfPath).ParentFolder
 '.ps1パス
 srcDir = objFSO.BuildPath(currentDir, "src")
 ps1Path = objFSO.BuildPath(srcDir, "process.ps1")
-'コマンド
-Const OPT = "Powershell -NoProfile -ExecutionPolicy RemoteSigned -NoExit "
+'Powershellコマンド要素
+psCmd = Join(Array("Powershell", "-NoProfile", "-ExecutionPolicy", "RemoteSigned", ps1Path), " ")
 
-'起動コマンド, ウィンドウ非表示, powershellコマンド終了待ち合わせしない
-objWshShell.Run OPT & ps1Path, 0, false
+'起動コマンド, PowerShellコマンド, ウィンドウ非表示, powershellコマンド終了待ち合わせしない
+objWshShell.Run psCmd, 0, false
 
 'リソース開放
 Set objFSO = Nothing

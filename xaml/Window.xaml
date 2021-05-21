@@ -6,7 +6,8 @@
     Height="500" 
     Width="700"
     MinHeight="400"
-    MinWidth="600">
+    MinWidth="600"
+    x:Name="AppWindow">
     <Grid>
         <!-- ナビゲーションビュー -->
         <Grid Background="{StaticResource ResourceKey=ColorGray400}">

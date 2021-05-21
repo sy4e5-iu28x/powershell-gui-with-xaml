@@ -9,15 +9,17 @@ class Logger {
     Hidden $filename = "./logger_debug.log"
     # ログ名
     Hidden $logName = "DebugLog"
+    # ログ出力リスナ
+    Hidden [System.Diagnostics.TextWriterTraceListener] $twTraceListener
 
     <#
     .SYNOPSIS
     コンストラクタ
     #>
     Hidden Logger() {
-        [System.Diagnostics.TextWriterTraceListener]$twTraceListener = 
+        $this.twTraceListener = 
             [System.Diagnostics.TextWriterTraceListener]::new($this.filename, $this.logName)
-        [System.Diagnostics.Trace]::Listeners.Add($twTraceListener)
+        [System.Diagnostics.Trace]::Listeners.Add($this.twTraceListener)
         [System.Diagnostics.Trace]::AutoFlush = $true
     }
 
@@ -77,5 +79,14 @@ class Logger {
             return
         }
         [System.Diagnostics.Debug]::WriteLine($object.ToString())
+    }
+
+    <#
+    .SYNOPSIS
+    ログ出力終了処理(アプリ終了時)
+    #>
+    Close() {
+        [System.Diagnostics.Trace]::Listeners.Remove($this.twTraceListener)
+        [System.Diagnostics.Trace]::AutoFlush = $false
     }
 }
