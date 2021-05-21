@@ -1,91 +1,26 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Databases>
-  <Database ID="c59891d9-dafb-4162-a4b6-c94b407c70a1">
+  <Database ID="8682421c-4227-49cf-b743-226d173e9fc4">
     <Definitions>
       <TableDefinitions>
-        <TableDefinition ID="fce77c9e-2365-4dd5-b687-e041425a22fa">
-          <Name>名称</Name>
+        <TableDefinition ID="b610d5ca-4aae-42f5-af4d-52023cfe5a0a">
+          <Name>データ項目1</Name>
           <DataType>Text</DataType>
         </TableDefinition>
-        <TableDefinition ID="aa293acb-9583-4d62-a44d-c0c2d6e45cd5">
-          <Name>所在地</Name>
+        <TableDefinition ID="362302ae-a701-4dce-b9e5-80069e259655">
+          <Name>データ項目2</Name>
+          <DataType>Image</DataType>
+        </TableDefinition>
+        <TableDefinition ID="3751b8fc-a6b3-4f37-a759-9f53f11306cc">
+          <Name>データ項目3</Name>
           <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="a0c12252-2cbd-4909-bd11-cf3d0575d765">
-          <Name>所属</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="e26667c5-4ca1-41e8-b2a2-35c6d349cc78">
-          <Name>新規項目4</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="8cbca7c6-2467-4cda-868d-8ebea0e00885">
-          <Name>新規項目4-3</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="73fdb510-b7b6-4a54-ab79-beb7057f5fa8">
-          <Name>C#で調べる</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="92e969b9-632c-482e-98a0-846d3c39efb7">
-          <Name>f</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="accbae65-6ad4-4d1c-9708-f380baf70fb8">
-          <Name>本日</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="0d27c880-a56c-46ca-9b91-abad24b881df">
-          <Name>識別子</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="333d47e0-cd87-4c5c-92e7-7edf4f609d40">
-          <Name>メールアドレス</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="22c74d60-d19c-4d9f-b199-864f990e980d">
-          <Name>3</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="e24d38eb-ff9e-46a6-8044-7caecdd305e4">
-          <Name>2</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="4cc96520-2da2-4766-af58-5632ec192328">
-          <Name>データ定義2</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="f06ebfe1-6bb5-4b21-9bab-885650604056">
-          <Name>本日のデータ</Name>
-          <DataType>Text</DataType>
-        </TableDefinition>
-        <TableDefinition ID="12efe75f-ebbf-4c9c-801f-363656a6079c">
-          <Name>1r3r sf</Name>
-          <DataType>Image</DataType>
-        </TableDefinition>
-        <TableDefinition ID="3b15f2ec-1cad-4bf7-94bb-434c783b788f">
-          <Name>データ操作1</Name>
-          <DataType>Image</DataType>
         </TableDefinition>
       </TableDefinitions>
     </Definitions>
     <Tables>
-      <Table ID="fce77c9e-2365-4dd5-b687-e041425a22fa" />
-      <Table ID="aa293acb-9583-4d62-a44d-c0c2d6e45cd5" />
-      <Table ID="a0c12252-2cbd-4909-bd11-cf3d0575d765" />
-      <Table ID="e26667c5-4ca1-41e8-b2a2-35c6d349cc78" />
-      <Table ID="8cbca7c6-2467-4cda-868d-8ebea0e00885" />
-      <Table ID="73fdb510-b7b6-4a54-ab79-beb7057f5fa8" />
-      <Table ID="92e969b9-632c-482e-98a0-846d3c39efb7" />
-      <Table ID="accbae65-6ad4-4d1c-9708-f380baf70fb8" />
-      <Table ID="0d27c880-a56c-46ca-9b91-abad24b881df" />
-      <Table ID="333d47e0-cd87-4c5c-92e7-7edf4f609d40" />
-      <Table ID="22c74d60-d19c-4d9f-b199-864f990e980d" />
-      <Table ID="e24d38eb-ff9e-46a6-8044-7caecdd305e4" />
-      <Table ID="4cc96520-2da2-4766-af58-5632ec192328" />
-      <Table ID="f06ebfe1-6bb5-4b21-9bab-885650604056" />
-      <Table ID="12efe75f-ebbf-4c9c-801f-363656a6079c" />
-      <Table ID="3b15f2ec-1cad-4bf7-94bb-434c783b788f" />
+      <Table ID="b610d5ca-4aae-42f5-af4d-52023cfe5a0a" />
+      <Table ID="362302ae-a701-4dce-b9e5-80069e259655" />
+      <Table ID="3751b8fc-a6b3-4f37-a759-9f53f11306cc" />
     </Tables>
   </Database>
 </Databases>
