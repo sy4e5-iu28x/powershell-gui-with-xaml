@@ -1,5 +1,6 @@
 ﻿using module ".\LogHelper.psm1"
 using module ".\XamlHelper.psm1"
+using module ".\Initialization.psm1"
 
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
@@ -33,6 +34,9 @@ try{
     [System.Xml.XmlNodeReader] $windowReader = [System.Xml.XmlNodeReader]::new($windowXaml)
     [System.Windows.Window] $window = [System.Windows.Markup.XamlReader]::Load($windowReader)
     
+    # アプリ関連ファイル初期設定
+    Initialize-AppFiles
+
     $app.run($window)
 } catch {
     [Logger]::GetInstance().Debug($PSItem)

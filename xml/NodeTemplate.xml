@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Xmlノード作成簡素化のためのノードテンプレートを定義する -->
+<TemplateNodes>
+    <!-- アプリ設定xml -->
+    <Configurations TemplateName="AppConfigurationsXml">
+        <DataSourceFilePath/>
+    </Configurations>
+     
+    <!-- データソースxml -->
+   <Databases TemplateName="DataSourceXml">
+        <Database ID="">
+            <Definitions>
+                <Sequences>
+                    <DatabaseID></DatabaseID>
+                    <TableID></TableID>
+                    <RecordID></RecordID>
+                </Sequences>
+                <TableDefinitions>
+                    <TableDefinition ID="">
+                        <Name/>
+                        <DataType/>
+                    </TableDefinition>
+                </TableDefinitions>
+            </Definitions>
+            <Tables>
+                <Table ID="">
+                    <Record ID=""/>
+                </Table>
+            </Tables>
+        </Database>
+    </Databases>
+</TemplateNodes>

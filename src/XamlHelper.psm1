@@ -2,13 +2,20 @@
 
 <#
 .SYNOPSIS
-Xml共通ヘルパクラス
+Xaml共通ヘルパクラス
 
 .PARAMETER xamlFilePath
 対象のXamlファイルパス
 #>
 class XamlCommonHelper {
-    [System.Xml.XmlNamespaceManager]CreateXamlNsManager([string]$xamlFilePath) {
+
+    <#
+    .Description
+    コンストラクタ
+    #>
+    XamlCommonHelper(){}
+
+    static [System.Xml.XmlNamespaceManager]CreateXamlNsManager([string]$xamlFilePath) {
         [xml]$targetXaml = Get-Content -Encoding UTF8 -Path $xamlFilePath
         [System.Xml.XmlNamespaceManager]$nsManager = [System.Xml.XmlNamespaceManager]::new($targetXaml.NameTable)
         $nsManager.AddNamespace("ns", $targetXaml.DocumentElement.GetAttribute("xmlns"))
@@ -51,9 +58,7 @@ class ApplicationXamlHelper {
     [xml] ApplyResourceDicSouce() {
         try {
             $xPath = "/ns:Application/ns:Application.Resources/ns:ResourceDictionary/ns:ResourceDictionary.MergedDictionaries/ns:ResourceDictionary"
-
-            [XamlCommonHelper]$commonHelper = [XamlCommonHelper]::new()
-            [System.Xml.XmlNamespaceManager]$nsManager = $commonHelper.CreateXamlNsManager($this.filePath)
+            [System.Xml.XmlNamespaceManager]$nsManager = [XamlCommonHelper]::CreateXamlNsManager($this.filePath)
 
             # 相対パスを絶対パスに変換する
             [System.Xml.XmlNodeList] $tabItemNodes = $this.appXaml.SelectNodes($xPath, $nsManager)
@@ -118,8 +123,7 @@ class WindowXamlHelper {
     #>
     Hidden [xml] ApplyFromTo([string[]] $srcFilePaths, [string] $srcXPath, [string] $destWindowXpath) {
         try {
-            [XamlCommonHelper]$commonHelper = [XamlCommonHelper]::new()
-            [System.Xml.XmlNamespaceManager]$nsManager = $commonHelper.CreateXamlNsManager($this.filePath)
+            [System.Xml.XmlNamespaceManager]$nsManager = [XamlCommonHelper]::CreateXamlNsManager($this.filePath)
             
             $srcFilePaths | ForEach-Object {
 
