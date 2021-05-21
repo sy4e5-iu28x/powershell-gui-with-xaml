@@ -17,9 +17,9 @@ try{
 
     [WindowXamlHelper] $windowXamlHelper = [WindowXamlHelper]::GetInstance().Initialize()
     # WindowTab定義の動的追加処理
-    Initialize-WindowTabs -windowXamlHelper $windowXamlHelper
+    Initialize-XamlWindowTabs -windowXamlHelper $windowXamlHelper
     # Dialog定義の動的追加処理
-    Initialize-Dialogs -windowXamlHelper $windowXamlHelper
+    Initialize-XamlDialogs -windowXamlHelper $windowXamlHelper
 
     [xml] $windowXaml = $windowXamlHelper.GetXmlDocument()
     [System.Xml.XmlNodeReader] $windowReader = [System.Xml.XmlNodeReader]::new($windowXaml)
@@ -39,6 +39,9 @@ try{
 
     # 非同期RunspacePool開始
     $global:asyncManager.OpenRunspacePool()
+
+    # ウィンドウコンポーネント初期設定
+    Initialize-WindowComponents -asyncManager $global:asyncManager
     # ウィンドウ表示
     $app.run($window)
 } catch {

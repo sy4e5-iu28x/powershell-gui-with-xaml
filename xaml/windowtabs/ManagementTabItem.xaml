@@ -5,7 +5,7 @@
     x:Name="ManagementTabItem" Header="データ管理"  Style="{StaticResource ResourceKey=StyleTabItem}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -18,13 +18,13 @@
             Style="{StaticResource ResourceKey=StyleTextBox}"
             x:Name="SearchTextInput"
             Tag="検索キーワードを入力"/>
-        <Button
-            Grid.Column="1"
-            Grid.Row="0"
-            Style="{StaticResource ResourceKey=StyleButton}"
-            x:Name="AddNewDataButton"
-            Content="新規作成"
-            Background="{StaticResource ColorCyan500}"/>
+            <Button
+                Grid.Column="1"
+                Grid.Row="0"
+                Style="{StaticResource ResourceKey=StyleButton}"
+                x:Name="AddNewDataButton"
+                Content="新規作成"
+                Background="{StaticResource ColorCyan500}"/>
         <ListView
             Grid.Column="0"
             Grid.ColumnSpan="2"

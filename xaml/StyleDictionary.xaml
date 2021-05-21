@@ -47,7 +47,8 @@
                             CornerRadius="3"
                             Background="{StaticResource ResourceKey=ColorWhite}"/>
                         <Border x:Name="TextBoxBorderDarkLayer" BorderThickness="1.5"
-                            BorderBrush="{StaticResource ResourceKey=ColorBlack}"
+                            BorderBrush="{StaticResource ResourceKey=ColorGray400}"
+                            Background="Transparent"
                             CornerRadius="3"
                             Opacity="1.0"/>
                         <TextBlock x:Name="WaterMarkLabel"
@@ -58,7 +59,7 @@
                                 HorizontalAlignment="Left" 
                                 Margin="5,0,0,0" 
                                 Visibility="Collapsed"/>
-                        <ScrollViewer x:Name="ContentHost" Margin="5,5,5,5" VerticalAlignment="Center"/>
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,5,5,5" VerticalAlignment="Center"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Text" Value="">

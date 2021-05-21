@@ -1,5 +1,6 @@
 ﻿using module ".\XmlHelper.psm1"
 using module ".\AsyncInvokeHelper.psm1"
+using module ".\DefaultDialog.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -18,7 +19,7 @@ function Initialize-AppFiles {
 .SYNOPSIS
 ウィンドウタブ初期設定
 #>
-function Initialize-WindowTabs {
+function Initialize-XamlWindowTabs {
     param([WindowXamlHelper] $windowXamlHelper)
     $windowTabXamlFilePaths = @(
         ".\xaml\windowtabs\ManagementTabItem.xaml",
@@ -33,7 +34,7 @@ function Initialize-WindowTabs {
 .SYNOPSIS
 ダイアログ初期設定
 #>
-function Initialize-Dialogs {
+function Initialize-XamlDialogs {
     param([WindowXamlHelper] $windowXamlHelper)
     $dialogTabXamlFilePaths = @(
         ".\xaml\dialogs\DefaultTabItem.xaml"
@@ -67,4 +68,13 @@ function Initialize-AsyncManager {
         $asyncManager.AddWindowControl($xName, $window.FindName($xName))
     }
     $asyncManager.Initialize($Host)
+}
+
+<#
+.SYNOPSIS
+ウィンドウコンポーネント初期設定処理
+#>
+function Initialize-WindowComponents {
+    param([AsyncManager]$asyncManager)
+    Initialize-DefaultDialog -asyncManager $asyncManager
 }
