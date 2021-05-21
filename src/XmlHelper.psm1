@@ -296,17 +296,10 @@ class DataSourceXmlHelper {
             [string] $templateXPath = "//*[@TemplateName='DataSourceXml']"
             $dataSourceNode = $templateXmlHelper.GetTemplateSingleNode($templateXPath)
             $this.xmlDoc.AppendChild($this.xmlDoc.ImportNode($dataSourceNode, $true))
-            
-            # Sequenceに初期値を設定
-            [string] $sequenceXPath = "/Databases/Database/Definitions/Sequences"
-            $sequenceNode = $this.xmlDoc.SelectSingleNode($sequenceXPath)
-            $sequenceNode.SelectSingleNode("DatabaseID").InnerText = 0
-            $sequenceNode.SelectSingleNode("TableID").InnerText = 0
-            $sequenceNode.SelectSingleNode("RecordID").InnerText = 0
 
             # データベースID設定
-            $this.xmlDoc.SelectSingleNode("/Databases/Database").Attributes.GetNamedItem("ID").Value = 0
-            $sequenceNode.SelectSingleNode("DatabaseID").InnerText = 1
+            $databaseID = New-Guid
+            $this.xmlDoc.SelectSingleNode("/Databases/Database").Attributes.GetNamedItem("ID").Value = $databaseID
             
             # TableDefinition, Tableノードの削除(テンプレートから複製したものが残っているため)
             $this.xmlDoc.SelectSingleNode("/Databases/Database/Definitions/TableDefinitions").RemoveAll()

@@ -1,11 +1,6 @@
 <Databases>
-  <Database ID="0">
+  <Database ID="fa9a3425-e46b-494d-8aab-4d94c6f21041">
     <Definitions>
-      <Sequences>
-        <DatabaseID>1</DatabaseID>
-        <TableID>0</TableID>
-        <RecordID>0</RecordID>
-      </Sequences>
       <TableDefinitions>
       </TableDefinitions>
     </Definitions>
