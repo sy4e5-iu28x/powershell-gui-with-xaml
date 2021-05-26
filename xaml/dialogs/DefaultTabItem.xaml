@@ -6,7 +6,8 @@
     Width="700"
     Height="300"
     Visibility="Collapsed">
-    <Grid>
+    <Grid
+        Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>

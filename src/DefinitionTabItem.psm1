@@ -5,7 +5,7 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
 .SYNOPSIS
-デフォルトダイアログ初期設定
+データ定義画面初期設定
 #>
 function Initialize-DefinitionTabItem {
     param([AsyncManager] $asyncManager)
@@ -57,7 +57,7 @@ function Initialize-DefinitionTabItem {
         }
     })
 
-    # ListView DoubleClick
+    # ListView MouseDoubleClick
     ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).Add_MouseDoubleClick({
         [pscustomobject] $target = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).SelectedItem
         [Logger]::GetInstance().Debug("データ定義一覧で項目がダブルクリックされました。[$($target)]")

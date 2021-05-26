@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Name="ManagementTabItem" Header="データ管理"  Style="{StaticResource ResourceKey=StyleTabItem}">
-    <Grid>
+    <Grid
+        Margin="15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
@@ -31,8 +32,10 @@
             Grid.Row="1"
             x:Name="ManagementDataList" 
             SelectionMode="Extended" 
+            BorderThickness="0"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            ItemContainerStyle="{StaticResource ResourceKey=StyleListViewItemContainer}">
+            ItemContainerStyle="{StaticResource ResourceKey=StyleListViewItemContainer}"
+            Margin="10">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>

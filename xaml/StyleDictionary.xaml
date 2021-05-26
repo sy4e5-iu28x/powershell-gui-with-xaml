@@ -164,7 +164,7 @@
                             CornerRadius="3" 
                             Margin="5" 
                             BorderThickness="0" 
-                            Background="{StaticResource ResourceKey=ColorGray300}"/>
+                            Background="{StaticResource ResourceKey=ColorWhite}"/>
                         <!-- 背景レイヤー -->
                         <Border  
                             x:Name="ItemBackgroundLayer"
@@ -172,7 +172,7 @@
                             Margin="{Binding ElementName=ItemBackground, Path=Margin}" 
                             BorderThickness="{Binding ElementName=ItemBackground, Path=BorderThickness}" 
                             Background="{StaticResource ResourceKey=ColorBlack}"
-                            Opacity="0.2"/>
+                            Opacity="0.1"/>
                         <ContentPresenter
                             TextBlock.FontSize="21"
                             HorizontalAlignment="Center"
@@ -187,7 +187,7 @@
                                 <Condition Property="IsSelected" Value="False"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.1"/>
+                            <Setter TargetName="ItemBackgroundLayer" Property="Opacity" Value="0.05"/>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

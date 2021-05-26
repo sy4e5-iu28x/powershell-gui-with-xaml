@@ -168,6 +168,22 @@ class ConfigXmlHelper {
             return $null
         }
     }
+
+    <#
+    .SYNOPSIS
+    アプリデータソースXmlファイルパス設定
+    #>
+    [void] SetDataSourceXmlFilePath([string] $fullpath) {
+        try {
+            [string] $xPath = "/Configurations/DataSourceFilePath"
+            $this.xmlDoc.SelectSingleNode($xPath).InnerText = $fullpath
+            # ファイル保存
+            [XmlHelper]::GetInstance().WriteXmlWithStream($this.xmlDoc, $this.filePath)
+        } catch {
+            $this.logger.Debug($PSItem)
+            $this.logger.Debug("アプリデータソースXmlファイルパス設定に失敗しました。[$($this.filePath)]")
+        }
+    }
 }
 
 <#
