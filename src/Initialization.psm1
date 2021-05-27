@@ -4,9 +4,11 @@ using module ".\AsyncInvokeHelper.psm1"
 using module ".\Window.psm1"
 using module ".\DefinitionTabItem.psm1"
 using module ".\ConfigurationTabItem.psm1"
+using module ".\ManagementTabItem.psm1"
 using module ".\DefaultDialog.psm1"
 using module ".\EditDefinitionDialog.psm1"
 using module ".\FileDirPickerDialog.psm1"
+using module ".\EditManagementDialog.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -46,6 +48,7 @@ function Initialize-XamlDialogs {
         ".\xaml\dialogs\DefaultTabItem.xaml"
         ".\xaml\dialogs\EditDefinitionTabItem.xaml"
         ".\xaml\dialogs\FileDirPickerTabItem.xaml"
+        ".\xaml\dialogs\EditManagementTabItem.xaml"
     )
     $windowXamlHelper.ApplyDialogs($dialogTabXamlFilePaths)
     return $windowXamlHelper
@@ -90,4 +93,6 @@ function Initialize-WindowComponents {
     Initialize-DefaultDialog -asyncManager $asyncManager
     Initialize-EditDefinitionDialog -asyncManager $asyncManager
     Initialize-FileDirPickerDialog -asyncManager $asyncManager
+    Initialize-ManagementTabItem -asyncManager $asyncManager
+    Initialize-EditManagementDialog -asyncManager $asyncManager
 }

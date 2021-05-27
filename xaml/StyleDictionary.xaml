@@ -193,5 +193,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <!-- リスト要素と子要素の選択状況を同期させる -->
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="IsSelected" Value="True"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

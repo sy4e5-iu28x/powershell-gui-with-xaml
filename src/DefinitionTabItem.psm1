@@ -64,9 +64,9 @@ function Initialize-DefinitionTabItem {
 
         # 遷移先ダイアログの設定
         # Guid
-        ([System.Windows.Controls.TextBlock]$asyncManager.GetWindowControl("DefinitionGuidTextBlock")).Text = $target.Guid
+        ([System.Windows.Controls.TextBlock]$asyncManager.GetWindowControl("DefinitionGuidTextBlock")).Text = $target.TableGuid
         # 項目名
-        ([System.Windows.Controls.TextBox]$asyncManager.GetWindowControl("DefinitionNameTextBox")).Text = $target.Name
+        ([System.Windows.Controls.TextBox]$asyncManager.GetWindowControl("DefinitionNameTextBox")).Text = $target.DefinitionName
         # データ型
         if([TableDataType]::Text.ToString() -eq $target.DataType) {
             ([System.Windows.Controls.RadioButton]$asyncManager.GetWindowControl("EditDefinitionDialogDataTypeText")).IsChecked = $true

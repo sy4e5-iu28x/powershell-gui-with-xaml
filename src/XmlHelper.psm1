@@ -433,9 +433,9 @@ class DataSourceXmlHelper {
                 [string] $guid = ([System.Xml.XmlNode]$_).Attributes.GetNamedItem("ID").Value
 
                 [pscustomobject] $item = New-Object psobject
-                Add-Member -InputObject $item -MemberType NoteProperty -Name "Name" -Value $tableName
+                Add-Member -InputObject $item -MemberType NoteProperty -Name "DefinitionName" -Value $tableName
                 Add-Member -InputObject $item -MemberType NoteProperty -Name "DataType" -Value $dataType
-                Add-Member -InputObject $item -MemberType NoteProperty -Name "Guid" -Value $guid
+                Add-Member -InputObject $item -MemberType NoteProperty -Name "TableGuid" -Value $guid
                 $results.Add($item)
             }
             return $results
