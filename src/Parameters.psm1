@@ -14,3 +14,12 @@
     # 非同期実行RunspacePool最大数
     static [int] $maxRunspaces = 2
 }
+
+<#
+.SYNOPSIS
+PickModeデータ型Enum
+#>
+enum PickMode {
+    Directory = 0
+    File = 1
+}

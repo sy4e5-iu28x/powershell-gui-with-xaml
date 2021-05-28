@@ -17,12 +17,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="FileDirPickerDialogTitle" FontSize="25" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">ディレクトリを選択してください</TextBlock>
         <TextBlock x:Name="FileDirPickerDialogCurrentDir" FontSize="21" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Margin="10"></TextBlock>
+        <TextBlock x:Name="FileDirPickerDialogPickMode" Grid.Row="0" Grid.Column="0" Visibility="Collapsed"></TextBlock>
         <Button Style="{StaticResource ResourceKey=StyleButton}"
             x:Name="FileDirPickerDialogGoParent"
             Grid.Row="1" Grid.Column="1"

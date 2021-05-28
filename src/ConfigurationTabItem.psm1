@@ -2,6 +2,7 @@
 using module ".\AsyncInvokeHelper.psm1"
 using module ".\XmlHelper.psm1"
 using module ".\Parameters.psm1"
+using module ".\FileDirPickerDialog.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -31,6 +32,10 @@ function Initialize-ConfigurationTabItem {
 
         # ファイルピッカーダイアログ表示
         ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("FileDirPickerDialog")).isSelected = $true
+        # ディレクトリ抽出モード指定
+        ([System.Windows.Controls.TextBlock] $asyncManager.GetWindowControl("FileDirPickerDialogPickMode")).Text = [PickMode]::Directory
+        # デフォルトでのファイルディレクトリ項目表示更新
+        Update-FileDirItemsDefault
         ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
     })
 

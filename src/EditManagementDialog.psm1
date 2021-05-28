@@ -2,6 +2,7 @@
 using module ".\AsyncInvokeHelper.psm1"
 using module ".\XmlHelper.psm1"
 using module ".\WpfFunctions.psm1"
+using module ".\Parameters.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -40,6 +41,10 @@ function Initialize-EditManagementDialog {
                 $results | ForEach-Object {
                     $_.Add_Click({
                         ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("FileDirPickerDialog")).isSelected = $true
+                        # 画像ファイル抽出モード指定
+                        ([System.Windows.Controls.TextBlock] $asyncManager.GetWindowControl("FileDirPickerDialogPickMode")).Text = [PickMode]::File
+                        # デフォルトでのファイルディレクトリ項目表示更新
+                        Update-FileDirItemsDefault
                         ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
                     })
                 }
@@ -58,7 +63,7 @@ function Initialize-EditManagementDialog {
         ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Collapsed"
         # パラメタ
         [pscustomobject] $param = New-Object psobject
-        
+
         Add-Member -InputObject $param -MemberType NoteProperty -Name "DataType" -Value $tableDataType
         
         # Guid (空文字の場合は、新規登録。値がある場合は更新)
