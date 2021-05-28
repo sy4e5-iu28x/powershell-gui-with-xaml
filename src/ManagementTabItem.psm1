@@ -53,13 +53,4 @@ function Initialize-ManagementTabItem {
             [Logger]::GetInstance().Debug("非同期スクリプトブロック処理実行に失敗しました。")
         }
     })
-
-    # ListView MouseDoubleClick
-    ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("ManagementDataList")).Add_MouseDoubleClick({
-        [pscustomobject] $target = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("ManagementDataList")).SelectedItem
-        [Logger]::GetInstance().Debug("データ管理一覧で項目がダブルクリックされました。[$($target)]")
-
-        ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("EditManagementDialog")).isSelected = $true
-        ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
-    })
 }

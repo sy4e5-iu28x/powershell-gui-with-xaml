@@ -57,25 +57,31 @@ function Initialize-DefinitionTabItem {
         }
     })
 
-    # ListView MouseDoubleClick
-    ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).Add_MouseDoubleClick({
-        [pscustomobject] $target = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).SelectedItem
-        [Logger]::GetInstance().Debug("データ定義一覧で項目がダブルクリックされました。[$($target)]")
+    # ListView Loaded
+    ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("DefinitionDataList")).Add_Loaded({
+        $this.ItemContainerGenerator.Items | ForEach-Object {
+            $listViewItem = $this.ItemContainerGenerator.ContainerFromItem($_)
+            
+            # ListViewItem MouseDoubleClick
+            $listViewItem.Add_MouseDoubleClick({
+                $selectedItem = $asyncManager.GetWindowControl("DefinitionDataList").ItemContainerGenerator.ItemFromContainer($this)
+                
+                # 遷移先ダイアログの設定
+                # Guid
+                ([System.Windows.Controls.TextBlock]$asyncManager.GetWindowControl("DefinitionGuidTextBlock")).Text = $selectedItem.TableGuid
+                # 項目名
+                ([System.Windows.Controls.TextBox]$asyncManager.GetWindowControl("DefinitionNameTextBox")).Text = $selectedItem.DefinitionName
+                # データ型
+                if([TableDataType]::Text.ToString() -eq $selectedItem.DataType) {
+                    ([System.Windows.Controls.RadioButton]$asyncManager.GetWindowControl("EditDefinitionDialogDataTypeText")).IsChecked = $true
+                } elseif([TableDataType]::Image.ToString() -eq $selectedItem.DataType) {
+                    ([System.Windows.Controls.RadioButton]$asyncManager.GetWindowControl("EditDefinitionDialogDataTypeImage")).IsChecked = $true
+                }
 
-        # 遷移先ダイアログの設定
-        # Guid
-        ([System.Windows.Controls.TextBlock]$asyncManager.GetWindowControl("DefinitionGuidTextBlock")).Text = $target.TableGuid
-        # 項目名
-        ([System.Windows.Controls.TextBox]$asyncManager.GetWindowControl("DefinitionNameTextBox")).Text = $target.DefinitionName
-        # データ型
-        if([TableDataType]::Text.ToString() -eq $target.DataType) {
-            ([System.Windows.Controls.RadioButton]$asyncManager.GetWindowControl("EditDefinitionDialogDataTypeText")).IsChecked = $true
-        } elseif([TableDataType]::Image.ToString() -eq $target.DataType) {
-            ([System.Windows.Controls.RadioButton]$asyncManager.GetWindowControl("EditDefinitionDialogDataTypeImage")).IsChecked = $true
+                ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("EditDefinitionDialog")).isSelected = $true
+                ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
+            })
         }
-
-        ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("EditDefinitionDialog")).isSelected = $true
-        ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
     })
 }
 
@@ -87,7 +93,6 @@ function Update-DefinitionDataList {
     param([AsyncManager] $asyncManager)
 
     [pscustomobject]$param = [pscustomobject]::new()
-    Add-Member -InputObject $param -MemberType ScriptMethod -Name GetExpandoObject -Value (Get-SciptBlockExpandoObject)
 
     # 非同期処理
     $reloadScriptBlock = {
@@ -107,33 +112,4 @@ function Update-DefinitionDataList {
     }
     # 非同期実行
     $asyncManager.InvokeAsync($reloadScriptBlock, $param)
-}
-
-<#
-.SYNOPSIS
-バインド処理に対応(INotifyPropertyChangedインタフェース)したオブジェクトを作成する。
-#>
-function Get-SciptBlockExpandoObject{
-    try{
-        $script = {
-            param($inputObject)
-            try {
-                [System.Dynamic.ExpandoObject] $returnObject = [System.Dynamic.ExpandoObject]::new()
-                $inputObject | Get-Member | Where-Object {$_.MemberType -eq "NoteProperty"} |
-                ForEach-Object {$returnObject.($_.Name) = $inputObject.($_.Name)}
-                [Logger]::GetInstance().Debug("ExpandoObject生成しました。[input:${inputObject}, return:${returnObject}]")
-                return $returnObject
-            } catch {
-                [Logger]::GetInstance().Debug($PSItem)
-                [Logger]::GetInstance().Debug("ExpandoObject生成に失敗しました。[${inputObject}]")
-                return $null
-            }
-        }
-        [System.Management.Automation.ScriptBlock]$scriptBlock = [System.Management.Automation.ScriptBlock]::Create($script)
-    } catch {
-        [Logger]::GetInstance().Debug($PSItem)
-        [Logger]::GetInstance().Debug("ScriptBlockの生成に失敗しました。[${inputObject}]")
-    }
-    
-    return $scriptBlock
 }

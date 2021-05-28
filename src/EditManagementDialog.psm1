@@ -1,6 +1,7 @@
 ﻿using module ".\LogHelper.psm1"
 using module ".\AsyncInvokeHelper.psm1"
 using module ".\XmlHelper.psm1"
+using module ".\WpfFunctions.psm1"
 Add-Type -AssemblyName PresentationFramework, PresentationCore
 
 <#
@@ -21,6 +22,30 @@ function Initialize-EditManagementDialog {
         [Logger]::GetInstance().Debug($PSItem)
         [Logger]::GetInstance().Debug("リスト初期化に失敗しました。")
     }
+
+    # ListView Loaded
+    ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("EditManagementDialogList")).Add_Loaded({
+        [System.Windows.Controls.ListView]$listView = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("EditManagementDialogList"))
+        # 各ListViewItem要素を取得
+        $listView.ItemContainerGenerator.Items | ForEach-Object {
+            [System.Windows.Controls.ListViewItem]$listViewItem = $listView.ItemContainerGenerator.ContainerFromItem($_)
+
+            # ListViewItem Selected
+            $listViewItem.Add_Selected({
+                # Button要素を取得
+                [System.Collections.ArrayList]$results = [System.Collections.ArrayList]::new()
+                Get-InnerControls -parent $this -targetControlType ([System.Windows.Controls.Button]) -results $results
+                
+                # ListViewItem上のButton Click
+                $results | ForEach-Object {
+                    $_.Add_Click({
+                        ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("FileDirPickerDialog")).isSelected = $true
+                        ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
+                    })
+                }
+            })
+        }
+    })
 
     # キャンセルボタン Click
     ([System.Windows.Controls.Button] $asyncManager.GetWindowControl("EditManagementDialogCancelButton")).Add_Click({
@@ -59,18 +84,5 @@ function Initialize-EditManagementDialog {
         # 非同期実行
         $asyncManager.InvokeAsync($scriptblock, $param)
         [Logger]::GetInstance().Debug("非同期スクリプトブロック処理実行します。")
-    })
-
-    # ListView MouseClick
-    ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("EditManagementDialogList")).Add_MouseDoubleClick({
-        $originalSource = ([System.Windows.RoutedEventArgs]$args[1]).OriginalSource
-        
-
-        [pscustomobject] $target = ([System.Windows.Controls.ListView] $asyncManager.GetWindowControl("EditManagementDialogList")).SelectedItem
-        [Logger]::GetInstance().Debug("データ管理一覧で項目がクリックされました。[$($target), $($originalSource)]")
-
-        
-        ([System.Windows.Controls.TabItem]$asyncManager.GetWindowControl("FileDirPickerDialog")).isSelected = $true
-        ([System.Windows.Controls.Grid]$asyncManager.GetWindowControl("OverlayDialogArea")).Visibility = "Visible"
     })
 }
